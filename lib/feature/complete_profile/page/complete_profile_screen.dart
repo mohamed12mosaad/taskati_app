@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:taskati_app/core/constants/app_image.dart';
+import 'package:taskati_app/core/constants/functions/navigations.dart';
+import 'package:taskati_app/core/services/shared_pref.dart';
 import 'package:taskati_app/core/styles/colors.dart';
 import 'package:taskati_app/core/styles/text_style.dart';
 import 'package:taskati_app/core/styles/widgets/custem_text_form_fielf.dart';
@@ -10,6 +12,7 @@ import 'package:taskati_app/core/styles/widgets/custome_svg_picture.dart';
 import 'package:taskati_app/core/styles/widgets/dialogs.dart';
 import 'package:taskati_app/core/styles/widgets/main_button.dart';
 import 'package:taskati_app/core/styles/widgets/tab_button.dart';
+import 'package:taskati_app/feature/home/pages/home_screen.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({super.key});
@@ -153,9 +156,11 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         padding: const EdgeInsets.fromLTRB(22, 5, 22, 30),
         child: MainButton(
           text: "Let's Start !",
-          onPress: () {
+          onPress: () async {
             if (path != null && controller.text.isNotEmpty) {
-              // navigate to next screen
+              await SharedPref.setString(controller.text, path!);
+              await SharedPref.setBool(SharedPref.isUploadedKey, true);
+              pushReplacementTo(context, HomeScreen());
             } else if (path == null && controller.text.isNotEmpty) {
               showErrorDialog(context, 'Select profile image');
             } else if (path != null && controller.text.isEmpty) {
